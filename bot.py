@@ -1,6 +1,7 @@
 from telethon import TelegramClient, events
 import re
 import logging
+import os
 
 # Configure logging
 logging.basicConfig(
@@ -9,8 +10,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-api_id = 33325581
-api_hash = "30e11108023b17d4e6fd7d91ae505c32"
+api_id = int(os.environ.get("API_ID", "33325581"))
+api_hash = os.environ.get("API_HASH", "30e11108023b17d4e6fd7d91ae505c32")
 
 # Source groups (যেখান থেকে message আসবে)
 source_groups = [
