@@ -2,6 +2,7 @@ from telethon import TelegramClient, events
 import re
 import logging
 import os
+import base64
 
 # Configure logging
 logging.basicConfig(
@@ -12,6 +13,16 @@ logger = logging.getLogger(__name__)
 
 api_id = int(os.environ.get("API_ID", "33325581"))
 api_hash = os.environ.get("API_HASH", "30e11108023b17d4e6fd7d91ae505c32")
+
+# Decode base64 session file if exists
+if os.path.exists("session.b64"):
+    logger.info("Decoding session file from base64...")
+    with open("session.b64", "r") as f:
+        encoded_session = f.read().strip()
+    decoded_session = base64.b64decode(encoded_session)
+    with open("session.session", "wb") as f:
+        f.write(decoded_session)
+    logger.info("Session file decoded successfully!")
 
 # Source groups (যেখান থেকে message আসবে)
 source_groups = [

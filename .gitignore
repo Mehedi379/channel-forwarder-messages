@@ -1,4 +1,5 @@
 session.session*
+session.b64
 *.pyc
 __pycache__/
 .env
