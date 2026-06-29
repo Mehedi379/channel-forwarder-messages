@@ -100,8 +100,9 @@ async def start_bot():
         raise
 
 if __name__ == "__main__":
+    import asyncio
     try:
-        client.loop.run_until_complete(start_bot())
+        asyncio.run(start_bot())
     except KeyboardInterrupt:
         logger.info("👋 Bot stopped by user")
     except Exception as e:
