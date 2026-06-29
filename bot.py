@@ -19,6 +19,8 @@ if os.path.exists("session.b64"):
     logger.info("Decoding session file from base64...")
     with open("session.b64", "r") as f:
         encoded_session = f.read().strip()
+    # Add padding if needed
+    encoded_session = encoded_session + '=' * (4 - len(encoded_session) % 4)
     decoded_session = base64.b64decode(encoded_session)
     with open("session.session", "wb") as f:
         f.write(decoded_session)
