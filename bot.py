@@ -14,8 +14,17 @@ logger = logging.getLogger(__name__)
 api_id = int(os.environ.get("API_ID", "33325581"))
 api_hash = os.environ.get("API_HASH", "30e11108023b17d4e6fd7d91ae505c32")
 
-# Decode base64 session file if exists
-if os.path.exists("session.b64"):
+# Decode session from environment variable or file
+session_b64 = os.environ.get("SESSION_B64")
+if session_b64:
+    logger.info("Decoding session from environment variable...")
+    # Add padding if needed
+    session_b64 = session_b64 + '=' * (4 - len(session_b64) % 4)
+    decoded_session = base64.b64decode(session_b64)
+    with open("session.session", "wb") as f:
+        f.write(decoded_session)
+    logger.info("Session decoded from environment variable successfully!")
+elif os.path.exists("session.b64"):
     logger.info("Decoding session file from base64...")
     with open("session.b64", "r") as f:
         encoded_session = f.read().strip()
