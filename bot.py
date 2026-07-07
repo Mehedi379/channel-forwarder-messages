@@ -24,7 +24,11 @@ if session_b64:
         # Add padding if needed
         session_b64 = session_b64 + '=' * (4 - len(session_b64) % 4)
         decoded_session = base64.b64decode(session_b64.encode('utf-8'))
-        with open("session.session", "wb") as f:
+        # Delete existing session file if it exists to avoid corruption
+        if os.path.exists("bot_session.session"):
+            os.remove("bot_session.session")
+            logger.info("Removed existing session file")
+        with open("bot_session.session", "wb") as f:
             f.write(decoded_session)
         logger.info("Session decoded from environment variable successfully!")
     except Exception as e:
@@ -40,7 +44,11 @@ elif os.path.exists("session.b64"):
         # Add padding if needed
         encoded_session = encoded_session + '=' * (4 - len(encoded_session) % 4)
         decoded_session = base64.b64decode(encoded_session.encode('utf-8'))
-        with open("session.session", "wb") as f:
+        # Delete existing session file if it exists to avoid corruption
+        if os.path.exists("bot_session.session"):
+            os.remove("bot_session.session")
+            logger.info("Removed existing session file")
+        with open("bot_session.session", "wb") as f:
             f.write(decoded_session)
         logger.info("Session file decoded successfully!")
     except Exception as e:
@@ -70,7 +78,7 @@ my_username = "@TraderSanzuBD"
 # Store processed message IDs to prevent duplicates
 processed_messages = set()
 
-client = TelegramClient("session.session", api_id, api_hash)
+client = TelegramClient("bot_session.session", api_id, api_hash)
 
 url_pattern = re.compile(r'https?://\S+|www\.\S+')
 mention_pattern = re.compile(r'@\w+')
