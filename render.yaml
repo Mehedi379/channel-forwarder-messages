@@ -1,0 +1,13 @@
+services:
+  - type: worker
+    name: channel-forwarder-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: API_ID
+        value: "33325581"
+      - key: API_HASH
+        value: "30e11108023b17d4e6fd7d91ae505c32"
+      - key: SESSION_B64
+        sync: false
