@@ -18,22 +18,34 @@ api_hash = os.environ.get("API_HASH", "30e11108023b17d4e6fd7d91ae505c32")
 session_b64 = os.environ.get("SESSION_B64")
 if session_b64:
     logger.info("Decoding session from environment variable...")
-    # Add padding if needed
-    session_b64 = session_b64 + '=' * (4 - len(session_b64) % 4)
-    decoded_session = base64.b64decode(session_b64)
-    with open("session.session", "wb") as f:
-        f.write(decoded_session)
-    logger.info("Session decoded from environment variable successfully!")
+    try:
+        # Clean the string - remove whitespace and newlines
+        session_b64 = session_b64.strip().replace('\n', '').replace('\r', '')
+        # Add padding if needed
+        session_b64 = session_b64 + '=' * (4 - len(session_b64) % 4)
+        decoded_session = base64.b64decode(session_b64.encode('utf-8'))
+        with open("session.session", "wb") as f:
+            f.write(decoded_session)
+        logger.info("Session decoded from environment variable successfully!")
+    except Exception as e:
+        logger.error(f"Failed to decode session from environment variable: {str(e)}")
+        raise
 elif os.path.exists("session.b64"):
     logger.info("Decoding session file from base64...")
-    with open("session.b64", "r") as f:
-        encoded_session = f.read().strip()
-    # Add padding if needed
-    encoded_session = encoded_session + '=' * (4 - len(encoded_session) % 4)
-    decoded_session = base64.b64decode(encoded_session)
-    with open("session.session", "wb") as f:
-        f.write(decoded_session)
-    logger.info("Session file decoded successfully!")
+    try:
+        with open("session.b64", "r") as f:
+            encoded_session = f.read().strip()
+        # Clean the string - remove whitespace and newlines
+        encoded_session = encoded_session.replace('\n', '').replace('\r', '')
+        # Add padding if needed
+        encoded_session = encoded_session + '=' * (4 - len(encoded_session) % 4)
+        decoded_session = base64.b64decode(encoded_session.encode('utf-8'))
+        with open("session.session", "wb") as f:
+            f.write(decoded_session)
+        logger.info("Session file decoded successfully!")
+    except Exception as e:
+        logger.error(f"Failed to decode session file: {str(e)}")
+        raise
 
 # Source groups (যেখান থেকে message আসবে)
 source_groups = [
